@@ -7,14 +7,14 @@
     <name>${project.artifactId}</name>
 
     <parent>
-        <groupId>org.dromara.mica-mqtt</groupId>
+        <groupId>plus.wcj.mica-mqtt</groupId>
         <artifactId>starter</artifactId>
         <version>${revision}</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>org.dromara.mica-mqtt</groupId>
+            <groupId>plus.wcj.mica-mqtt</groupId>
             <artifactId>mica-mqtt-server</artifactId>
         </dependency>
         <dependency>
