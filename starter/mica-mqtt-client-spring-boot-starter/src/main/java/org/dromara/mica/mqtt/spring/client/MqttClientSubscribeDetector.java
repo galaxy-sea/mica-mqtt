@@ -42,6 +42,7 @@ import java.util.Arrays;
 public class MqttClientSubscribeDetector implements BeanPostProcessor {
 	private final ApplicationContext applicationContext;
 
+
 	@Override
 	public Object postProcessAfterInitialization(@NonNull Object bean, String beanName) throws BeansException {
 		Class<?> userClass = ClassUtils.getUserClass(bean);

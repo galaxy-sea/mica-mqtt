@@ -37,7 +37,9 @@ import org.tio.utils.timer.TimerTaskService;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -188,10 +190,14 @@ public final class MqttClientCreator {
 	 * groupExecutor
 	 */
 	private ExecutorService groupExecutor;
+
 	/**
 	 * mqttExecutor
 	 */
-	private ExecutorService mqttExecutor;
+	// private ExecutorService mqttExecutor;
+
+	private ExecutorService mqttExecutor = createExecutor(true);
+
 	/**
 	 * taskService
 	 */
@@ -719,5 +725,30 @@ public final class MqttClientCreator {
 			tioClient.stop();
 		}
 	}
+
+
+	public static ExecutorService createExecutor(boolean useVirtualThread) {
+		if (useVirtualThread && isVirtualThreadSupported()) {
+			try {
+				return (ExecutorService)
+						Executors.class.getMethod("newVirtualThreadPerTaskExecutor")
+									   .invoke(null);
+			} catch (Exception e) {
+				// fallback to platform thread pool
+			}
+		}
+		// fallback: 平台线程池（使用缓存线程池，或自定义大小）
+		return Executors.newCachedThreadPool();
+	}
+
+	public static boolean isVirtualThreadSupported() {
+		try {
+			Executors.class.getMethod("newVirtualThreadPerTaskExecutor");
+			return true;
+		} catch (NoSuchMethodException e) {
+			return false;
+		}
+	}
+
 
 }
